@@ -18,6 +18,7 @@ $ npm install
 
 1. In the root of the project, rename the .env.example file to .env.
 2. Fill the environment variables in the .env file with your database credentials.
+3. Fill the environment variables in the .env file with your JWT secret key.
 
 ### 3. Intall dependencies
 

@@ -5,6 +5,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { CoachesModule } from './coaches/coaches.module';
 import { GymnastsModule } from './gymnasts/gymnasts.module';
+import { AuthModule } from './auth/auth.module';
 
 @Module({
   imports: [
@@ -25,6 +26,7 @@ import { GymnastsModule } from './gymnasts/gymnasts.module';
     }),
     CoachesModule,
     GymnastsModule,
+    AuthModule,
   ],
   controllers: [AppController],
   providers: [AppService],
