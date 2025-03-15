@@ -1,4 +1,4 @@
 export class CreateCoachDto {
-  readonly name: string;
-  readonly email: string;
+  readonly userId: string;
+  readonly gymnasts?: string[];
 }

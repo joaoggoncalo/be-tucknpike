@@ -1,24 +1,15 @@
-import {
-  Entity,
-  PrimaryGeneratedColumn,
-  Column,
-  ManyToMany,
-  JoinTable,
-} from 'typeorm';
-import { Gymnast } from '../gymnasts/gymnast.entity';
+import { Entity, PrimaryGeneratedColumn, Column } from 'typeorm';
 
 @Entity()
 export class Coach {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
-  @Column()
-  name: string;
+  // Reference to the user in the users table.
+  @Column({ type: 'uuid' })
+  userId: string;
 
-  @Column({ unique: true })
-  email: string;
-
-  @ManyToMany(() => Gymnast, (gymnast) => gymnast.coaches, { cascade: true })
-  @JoinTable() // This decorator is used on one side of the relation.
-  gymnasts: Gymnast[];
+  // Array of gymnast IDs associated with this coach.
+  @Column('uuid', { array: true, nullable: true })
+  gymnasts: string[];
 }
