@@ -27,18 +27,22 @@ export class GymnastsController {
     return this.gymnastsService.findAll();
   }
 
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.gymnastsService.findOne(id);
+  // Use userId as the parameter
+  @Get(':userId')
+  findOne(@Param('userId') userId: string) {
+    return this.gymnastsService.findOne(userId);
   }
 
-  @Put(':id')
-  update(@Param('id') id: string, @Body() updateGymnastDto: UpdateGymnastDto) {
-    return this.gymnastsService.update(id, updateGymnastDto);
+  @Put(':userId')
+  update(
+    @Param('userId') userId: string,
+    @Body() updateGymnastDto: UpdateGymnastDto,
+  ) {
+    return this.gymnastsService.update(userId, updateGymnastDto);
   }
 
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.gymnastsService.remove(id);
+  @Delete(':userId')
+  remove(@Param('userId') userId: string) {
+    return this.gymnastsService.remove(userId);
   }
 }

@@ -31,23 +31,23 @@ export class GymnastsService {
     return this.gymnastRepository.find();
   }
 
-  async findOne(id: string): Promise<Gymnast> {
-    const gymnast = await this.gymnastRepository.findOneBy({ id });
+  async findOne(userId: string): Promise<Gymnast> {
+    const gymnast = await this.gymnastRepository.findOneBy({ userId });
     if (!gymnast) {
-      throw new BadRequestException(`Gymnast with id ${id} not found`);
+      throw new BadRequestException(`Gymnast with userId ${userId} not found`);
     }
     return gymnast;
   }
 
   async update(
-    id: string,
+    userId: string,
     updateGymnastDto: UpdateGymnastDto,
   ): Promise<Gymnast> {
-    await this.gymnastRepository.update(id, updateGymnastDto);
-    return this.findOne(id);
+    await this.gymnastRepository.update({ userId }, updateGymnastDto);
+    return this.findOne(userId);
   }
 
-  async remove(id: string): Promise<void> {
-    await this.gymnastRepository.delete(id);
+  async remove(userId: string): Promise<void> {
+    await this.gymnastRepository.delete({ userId });
   }
 }

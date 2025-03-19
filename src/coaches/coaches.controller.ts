@@ -27,27 +27,29 @@ export class CoachesController {
     return this.coachesService.findAll();
   }
 
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.coachesService.findOne(id);
+  @Get(':userId')
+  findOne(@Param('userId') userId: string) {
+    return this.coachesService.findOne(userId);
   }
 
-  @Put(':id')
-  update(@Param('id') id: string, @Body() updateCoachDto: UpdateCoachDto) {
-    return this.coachesService.update(id, updateCoachDto);
-  }
-
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.coachesService.remove(id);
-  }
-
-  // Endpoint to add a gymnast to a coach.
-  @Post(':coachId/gymnasts/:gymnastId')
-  addGymnast(
-    @Param('coachId') coachId: string,
-    @Param('gymnastId') gymnastId: string,
+  @Put(':userId')
+  update(
+    @Param('userId') userId: string,
+    @Body() updateCoachDto: UpdateCoachDto,
   ) {
-    return this.coachesService.addGymnast(coachId, gymnastId);
+    return this.coachesService.update(userId, updateCoachDto);
+  }
+
+  @Delete(':userId')
+  remove(@Param('userId') userId: string) {
+    return this.coachesService.remove(userId);
+  }
+
+  @Post(':coachUserId/gymnasts/:gymnastUserId')
+  addGymnast(
+    @Param('coachUserId') coachUserId: string,
+    @Param('gymnastUserId') gymnastUserId: string,
+  ) {
+    return this.coachesService.addGymnast(coachUserId, gymnastUserId);
   }
 }
