@@ -74,6 +74,7 @@ export class CoachesService {
         'Gymnast is already associated with this coach',
       );
     }
+
     coach.gymnasts.push(gymnastId);
     return this.coachRepository.save(coach);
   }
