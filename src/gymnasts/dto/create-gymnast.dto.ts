@@ -1,4 +1,4 @@
 export class CreateGymnastDto {
-  readonly name: string;
-  readonly email: string;
+  readonly userId: string;
+  readonly trainingIds?: string[];
 }

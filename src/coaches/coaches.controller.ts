@@ -42,7 +42,7 @@ export class CoachesController {
     return this.coachesService.remove(id);
   }
 
-  // New dedicated endpoint for adding a gymnast to a coach
+  // Endpoint to add a gymnast to a coach.
   @Post(':coachId/gymnasts/:gymnastId')
   addGymnast(
     @Param('coachId') coachId: string,

@@ -1,17 +1,15 @@
-import { Entity, PrimaryGeneratedColumn, Column, ManyToMany } from 'typeorm';
-import { Coach } from '../coaches/coach.entity';
+import { Entity, PrimaryGeneratedColumn, Column } from 'typeorm';
 
 @Entity()
 export class Gymnast {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
-  @Column()
-  name: string;
+  // Reference to the user in the users table.
+  @Column({ type: 'uuid' })
+  userId: string;
 
-  @Column({ unique: true })
-  email: string;
-
-  @ManyToMany(() => Coach, (coach) => coach.gymnasts)
-  coaches: Coach[];
+  // Array of training IDs associated with this gymnast.
+  @Column('uuid', { array: true, nullable: true })
+  trainingIds: string[];
 }

@@ -20,7 +20,7 @@ export class GymnastsService {
       if (typeof error === 'object' && error !== null && 'code' in error) {
         const dbError = error as { code?: string };
         if (dbError.code === '23505') {
-          throw new BadRequestException('Email is already in use');
+          throw new BadRequestException('User ID is already in use');
         }
       }
       throw error;
@@ -28,14 +28,11 @@ export class GymnastsService {
   }
 
   async findAll(): Promise<Gymnast[]> {
-    return this.gymnastRepository.find({ relations: ['coaches'] });
+    return this.gymnastRepository.find();
   }
 
   async findOne(id: string): Promise<Gymnast> {
-    const gymnast = await this.gymnastRepository.findOne({
-      where: { id },
-      relations: ['coaches'],
-    });
+    const gymnast = await this.gymnastRepository.findOneBy({ id });
     if (!gymnast) {
       throw new BadRequestException(`Gymnast with id ${id} not found`);
     }
