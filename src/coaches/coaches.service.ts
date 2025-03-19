@@ -34,48 +34,70 @@ export class CoachesService {
     return this.coachRepository.find();
   }
 
-  async findOne(id: string): Promise<Coach> {
-    const coach = await this.coachRepository.findOneBy({ id });
+  async findOne(userId: string): Promise<Coach> {
+    const coach = await this.coachRepository.findOneBy({ userId });
     if (!coach) {
-      throw new BadRequestException(`Coach with id ${id} not found`);
+      throw new BadRequestException(`Coach with userId ${userId} not found`);
     }
     return coach;
   }
 
-  async update(id: string, updateCoachDto: UpdateCoachDto): Promise<Coach> {
-    await this.coachRepository.update(id, updateCoachDto);
-    return this.findOne(id);
+  async update(userId: string, updateCoachDto: UpdateCoachDto): Promise<Coach> {
+    await this.coachRepository.update({ userId }, updateCoachDto);
+    return this.findOne(userId);
   }
 
-  async remove(id: string): Promise<void> {
-    await this.coachRepository.delete(id);
+  async remove(userId: string): Promise<void> {
+    await this.coachRepository.delete({ userId });
   }
 
-  // Adds a gymnast (by ID) to the coach's gymnasts array.
-  async addGymnast(coachId: string, gymnastId: string): Promise<Coach> {
-    const coach = await this.coachRepository.findOneBy({ id: coachId });
+  // Adds a gymnast (by userId) to the coach's gymnasts array
+  // and also adds the coach's userId to the gymnast's coaches array.
+  async addGymnast(coachUserId: string, gymnastUserId: string): Promise<Coach> {
+    // Retrieve coach using the userId.
+    const coach = await this.coachRepository.findOneBy({ userId: coachUserId });
     if (!coach) {
-      throw new BadRequestException(`Coach with id ${coachId} not found`);
+      throw new BadRequestException(
+        `Coach with userId ${coachUserId} not found`,
+      );
     }
 
-    // Check if the gymnast exists.
-    const gymnast = await this.gymnastRepository.findOneBy({ id: gymnastId });
+    // Retrieve gymnast using the userId.
+    const gymnast = await this.gymnastRepository.findOneBy({
+      userId: gymnastUserId,
+    });
     if (!gymnast) {
-      throw new BadRequestException(`Gymnast with id ${gymnastId} not found`);
+      throw new BadRequestException(
+        `Gymnast with userId ${gymnastUserId} not found`,
+      );
     }
 
-    // Initialize gymnasts array if null.
+    // Initialize arrays if necessary.
     if (!coach.gymnasts) {
       coach.gymnasts = [];
     }
-    // Check for duplicate gymnast.
-    if (coach.gymnasts.includes(gymnastId)) {
+    if (!gymnast.coaches) {
+      gymnast.coaches = [];
+    }
+
+    // Check that the gymnast is not already associated with the coach.
+    if (coach.gymnasts.includes(gymnastUserId)) {
       throw new BadRequestException(
         'Gymnast is already associated with this coach',
       );
     }
 
-    coach.gymnasts.push(gymnastId);
-    return this.coachRepository.save(coach);
+    // Add gymnastUserId to the coach's gymnasts array.
+    coach.gymnasts.push(gymnastUserId);
+
+    // Also add coachUserId to the gymnast's coaches array if not already added.
+    if (!gymnast.coaches.includes(coachUserId)) {
+      gymnast.coaches.push(coachUserId);
+    }
+
+    // Save both records.
+    await this.coachRepository.save(coach);
+    await this.gymnastRepository.save(gymnast);
+    return coach;
   }
 }
