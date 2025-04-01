@@ -13,7 +13,4 @@ export class Gymnast {
   // Array of coach IDs associated with this gymnast.
   @Column('uuid', { array: true, nullable: true })
   coaches: string[];
-
-  @Column({ type: 'date', nullable: true })
-  birthdate: Date;
 }
