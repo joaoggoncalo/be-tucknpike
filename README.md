@@ -50,6 +50,25 @@ Use the Swagger UI to test the endpoints. Access http://localhost:3001/api/ to t
 POST /coaches/{coachId}/gymnasts/{gymnastId}
 
 
+   
+## Migrations
 
-Note: Currently I'm using synchronize true while connecting to the database. This is not recommended for production environments, I'm just using it for debug purposes. In the future this will be changed to real migrations.
+To create a new migration, use the following command:
 
+```bash
+npm run migration:generate src/migrations/{migration_name}
+```
+
+This will create a new migration file in the `src/migrations` directory. 
+
+To run the migrations, use the following command:
+
+```bash
+npm run migration:run
+```
+
+To revert the last migration, use the following command:
+
+```bash
+npm run migration:revert
+```
