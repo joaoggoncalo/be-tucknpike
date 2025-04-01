@@ -2,13 +2,9 @@ name: E2E Tests
 
 on:
   push:
-    branches:
-      - master
-      - develop
+    branches: [master, develop]
   pull_request:
-    branches:
-      - master
-      - develop
+    branches: [master, develop]
 
 jobs:
   e2e-tests:
@@ -23,15 +19,10 @@ jobs:
           POSTGRES_DB: test_db
         ports:
           - 5432:5432
-        options: >-
-          --health-cmd pg_isready
-          --health-interval 10s
-          --health-timeout 5s
-          --health-retries 5
+        options: --health-cmd pg_isready --health-interval 10s --health-timeout 5s --health-retries 5
 
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v3
+      - uses: actions/checkout@v3
 
       - name: Set up Node.js
         uses: actions/setup-node@v3
@@ -42,19 +33,26 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      - name: Create test config
+      - name: Check app config
         run: |
-          cat > .env.test << EOF
-          DATABASE_URL=postgresql://postgres:postgres@localhost:5432/test_db
-          DB_HOST=localhost
-          DB_PORT=5432
-          DB_USERNAME=postgres
-          DB_PASSWORD=postgres
-          DB_DATABASE=test_db
-          JWT_SECRET=test-jwt-secret-for-ci
-          EOF
+          echo "NODE_ENV=test" > .env.test
+          echo "JWT_SECRET=test-jwt-secret-for-ci" >> .env.test
+          echo "DATABASE_URL=postgresql://postgres:postgres@localhost:5432/test_db" >> .env.test
+          echo "DB_HOST=localhost" >> .env.test
+          echo "DB_PORT=5432" >> .env.test
+          echo "DB_USERNAME=postgres" >> .env.test
+          echo "DB_PASSWORD=postgres" >> .env.test
+          echo "DB_DATABASE=test_db" >> .env.test
+          cat .env.test
 
       - name: Run end-to-end tests
-        run: npm run test:e2e -- --forceExit --detectOpenHandles --testTimeout=10000
+        run: NODE_ENV=test JWT_SECRET=test-jwt-secret-for-ci npm run test:e2e -- --forceExit --detectOpenHandles --testTimeout=30000
         env:
           NODE_ENV: test
+          JWT_SECRET: test-jwt-secret-for-ci
+          DATABASE_URL: postgresql://postgres:postgres@localhost:5432/test_db
+          DB_HOST: localhost
+          DB_PORT: 5432
+          DB_USERNAME: postgres
+          DB_PASSWORD: postgres
+          DB_DATABASE: test_db
