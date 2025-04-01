@@ -19,10 +19,15 @@ jobs:
           POSTGRES_DB: test_db
         ports:
           - 5432:5432
-        options: --health-cmd pg_isready --health-interval 10s --health-timeout 5s --health-retries 5
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
 
     steps:
-      - uses: actions/checkout@v3
+      - name: Checkout repository
+        uses: actions/checkout@v3
 
       - name: Set up Node.js
         uses: actions/setup-node@v3
@@ -33,26 +38,27 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      - name: Check app config
+      - name: Create test database
         run: |
-          echo "NODE_ENV=test" > .env.test
-          echo "JWT_SECRET=test-jwt-secret-for-ci" >> .env.test
-          echo "DATABASE_URL=postgresql://postgres:postgres@localhost:5432/test_db" >> .env.test
-          echo "DB_HOST=localhost" >> .env.test
-          echo "DB_PORT=5432" >> .env.test
-          echo "DB_USERNAME=postgres" >> .env.test
-          echo "DB_PASSWORD=postgres" >> .env.test
-          echo "DB_DATABASE=test_db" >> .env.test
-          cat .env.test
+          sudo apt-get update
+          sudo apt-get install --yes postgresql-client
+          PGPASSWORD=postgres psql -h localhost -U postgres -c "CREATE DATABASE test_db;"
 
-      - name: Run end-to-end tests
-        run: NODE_ENV=test JWT_SECRET=test-jwt-secret-for-ci npm run test:e2e -- --forceExit --detectOpenHandles --testTimeout=30000
-        env:
-          NODE_ENV: test
-          JWT_SECRET: test-jwt-secret-for-ci
-          DATABASE_URL: postgresql://postgres:postgres@localhost:5432/test_db
-          DB_HOST: localhost
-          DB_PORT: 5432
-          DB_USERNAME: postgres
-          DB_PASSWORD: postgres
-          DB_DATABASE: test_db
+      - name: Update test configuration
+        run: |
+          cat > .env.test << EOL
+          NODE_ENV=test
+          JWT_SECRET=test-jwt-secret-for-ci
+          DB_HOST=localhost
+          DB_PORT=5432
+          DB_USERNAME=postgres
+          DB_PASSWORD=postgres
+          DB_DATABASE=test_db
+          DATABASE_URL=postgresql://postgres:postgres@localhost:5432/test_db
+          EOL
+
+      - name: Run e2e tests
+        run: |
+          export JWT_SECRET=test-jwt-secret-for-ci
+          export NODE_ENV=test
+          npm run test:e2e -- --forceExit --detectOpenHandles --testTimeout=30000

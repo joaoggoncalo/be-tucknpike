@@ -19,6 +19,27 @@ interface GymnastResponse {
   coaches: string[];
 }
 
+let app: INestApplication;
+
+beforeAll(async () => {
+  try {
+    const moduleFixture = await Test.createTestingModule({
+      imports: [AppModule],
+    }).compile();
+
+    app = moduleFixture.createNestApplication();
+    await app.init();
+  } catch (error) {
+    console.error('Error initializing app:', error);
+  }
+});
+
+afterAll(async () => {
+  if (app) {
+    await app.close();
+  }
+});
+
 describe('GymnastsController (e2e)', () => {
   let app: INestApplication;
   let authToken: string;
