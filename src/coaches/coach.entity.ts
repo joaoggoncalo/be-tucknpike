@@ -7,4 +7,7 @@ export class Coach {
 
   @Column('uuid', { array: true, nullable: true })
   gymnasts: string[];
+
+  @Column('varchar', { unique: true })
+  username: string;
 }
