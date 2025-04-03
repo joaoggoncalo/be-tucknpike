@@ -40,6 +40,21 @@ export class TrainingController {
     return this.trainingService.findOne(id, req.user.userId);
   }
 
+  @Get('my-trainings')
+  findMyTrainings(@Req() req: RequestWithUser) {
+    // User can only access their own trainings
+    return this.trainingService.findAllByUser(req.user.userId, req.user.userId);
+  }
+
+  @Get('gymnast/:gymnastId')
+  findGymnastTrainings(
+    @Param('gymnastId') gymnastId: string,
+    @Req() req: RequestWithUser,
+  ) {
+    // Only coaches can access their gymnasts' trainings
+    return this.trainingService.findAllByUser(gymnastId, req.user.userId);
+  }
+
   @Put(':id')
   update(
     @Param('id') id: string,
