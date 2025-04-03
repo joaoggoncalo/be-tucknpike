@@ -101,6 +101,31 @@ export class TrainingService {
     return this.trainingRepository.save(training);
   }
 
+  async findAllByUser(
+    targetUserId: string,
+    currentUserId: string,
+  ): Promise<Training[]> {
+    // Only allow access if current user is the target user or their coach
+    if (targetUserId !== currentUserId) {
+      // Check if current user is a coach of the target user
+      const gymnast = await this.gymnastRepository.findOne({
+        where: { userId: targetUserId },
+      });
+
+      if (!gymnast?.coaches?.includes(currentUserId)) {
+        throw new ForbiddenException(
+          'You do not have permission to access these trainings',
+        );
+      }
+    }
+
+    // Find all trainings for the target user
+    return this.trainingRepository.find({
+      where: { userId: targetUserId },
+      order: { date: 'DESC' },
+    });
+  }
+
   async updateStatus(
     trainingId: string,
     status: TrainingStatus,
