@@ -6,6 +6,7 @@ import { GymnastsModule } from './gymnasts/gymnasts.module';
 import { AuthModule } from './auth/auth.module';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
+import { TrainingModule } from './trainings/training.module';
 
 @Module({
   imports: [
@@ -23,12 +24,13 @@ import { AppService } from './app.service';
         host: configService.get<string>('POSTGRES_HOST'),
         port: configService.get<number>('POSTGRES_PORT'),
         autoLoadEntities: true,
-        synchronize: false,
+        synchronize: true,
       }),
     }),
     CoachesModule,
     GymnastsModule,
     AuthModule,
+    TrainingModule,
   ],
   controllers: [AppController],
   providers: [AppService],
