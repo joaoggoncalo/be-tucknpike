@@ -1,3 +1,6 @@
+import { webcrypto } from 'crypto';
+global.crypto = webcrypto as unknown as Crypto;
+
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
