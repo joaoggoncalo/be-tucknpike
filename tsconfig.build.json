@@ -5,6 +5,6 @@
     "baseUrl": "./",
     "incremental": true
   },
-  "exclude": ["node_modules", "docker/volumes/functions", "test", "dist", "**/*spec.ts", "src/migrations"
+  "exclude": ["node_modules", "docker", "test", "dist", "**/*spec.ts", "src/migrations"
   ]
 }

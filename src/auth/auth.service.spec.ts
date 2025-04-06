@@ -165,6 +165,7 @@ describe('AuthService', () => {
           }
           return false;
         });
+
       return expect(
         authService.login({ usernameOrEmail: 'testuser', password: 'wrong' }),
       ).rejects.toThrow(UnauthorizedException);

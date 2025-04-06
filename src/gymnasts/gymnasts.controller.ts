@@ -91,6 +91,7 @@ export class GymnastsController {
   ) {
     return this.gymnastsService.updateSeasonGoals(
       gymnastId,
+
       updateSeasonGoalsDto.seasonGoals,
       req.user.userId,
     );
