@@ -6,32 +6,41 @@ $ npm install
 
 ## Setup Instructions
 
-### 1. Create a PostgreSQL Database
+2. If you want to run it through docker
+2.1 Environment Configuration
+Create Environment File:
+Go to /docker and copy the example environment file:
 
-1. Install PostgreSQL on your machine if you haven't already.
-2. Create a new database (example, `tucknpike`) using pgAdmin or the SQL Shell:
-   ```sql
-   CREATE DATABASE tucknpike;
-   ```
-   
-### 2. Configure Environment Variables
+```bash'
+$ cp .env.example .env
+```
 
-1. In the root of the project, rename the .env.example file to .env.
-2. Fill the environment variables in the .env file with your database credentials.
-3. Fill the environment variables in the .env file with your JWT secret key.
+Run the command to start the containers:
 
-### 3. Intall dependencies
+```bash
+$ docker-compose up --build
+```
+
+After this, the backend is accessible through localhost:3001. 
+You can also access localhost:3001/api to see the API Specifications.
+
+3. If you want to run it locally
+3.1 Install Dependencies
+Install the required npm packages:
 
 ```bash
 $ npm install
 ```
 
-### 4. Start the application
+3.2 Environment Configuration
+Create Environment File:
+In the root directory, copy the example environment file:
 
-```bash
-$ npm run start:dev
-```
+
+4. Start the application
 By default, the server will run on port 3001.
+(The .env variables are mentioned in the installation guide)
+
 
 ### 5. Testing the endpoints
 Use the Swagger UI to test the endpoints. Access http://localhost:3001/api/ to test the endpoints.
@@ -71,4 +80,12 @@ To revert the last migration, use the following command:
 
 ```bash
 npm run migration:revert
+```
+
+
+## Tests
+To run the tests, use the following command:
+
+```bash
+npm run test
 ```
