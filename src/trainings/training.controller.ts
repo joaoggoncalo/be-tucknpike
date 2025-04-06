@@ -16,6 +16,7 @@ import { ApiTags, ApiBearerAuth } from '@nestjs/swagger';
 import { UpdateExercisesStatusDto } from './dto/exercise-status.dto';
 import { Request } from 'express';
 import { Training } from './training.entity';
+import { UpdateLocationDto } from './dto/update-location.dto';
 
 interface RequestWithUser extends Request {
   user: {
@@ -35,13 +36,9 @@ export class TrainingController {
     return this.trainingService.create(createTrainingDto);
   }
 
-  @Get(':id')
-  findOne(@Param('id') id: string, @Req() req: RequestWithUser) {
-    return this.trainingService.findOne(id, req.user.userId);
-  }
-
   @Get('my-trainings')
   findMyTrainings(@Req() req: RequestWithUser) {
+    console.log('req.user.userId');
     // User can only access their own trainings
     return this.trainingService.findAllByUser(req.user.userId, req.user.userId);
   }
@@ -53,6 +50,30 @@ export class TrainingController {
   ) {
     // Only coaches can access their gymnasts' trainings
     return this.trainingService.findAllByUser(gymnastId, req.user.userId);
+  }
+
+  // Add to TrainingController
+  @Get('my-athletes-trainings')
+  findAllAthletesTrainings(@Req() req: RequestWithUser) {
+    return this.trainingService.findAllForCoachAthletes(req.user.userId);
+  }
+
+  @Get(':id')
+  findOne(@Param('id') id: string, @Req() req: RequestWithUser) {
+    return this.trainingService.findOne(id, req.user.userId);
+  }
+
+  @Put(':id/location')
+  updateLocation(
+    @Param('id') id: string,
+    @Body() updateLocationDto: UpdateLocationDto,
+    @Req() req: RequestWithUser,
+  ) {
+    return this.trainingService.updateLocation(
+      id,
+      updateLocationDto.location,
+      req.user.userId,
+    );
   }
 
   @Put(':id')
