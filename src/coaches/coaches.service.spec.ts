@@ -45,7 +45,7 @@ describe('CoachesService', () => {
   describe('create', () => {
     it('should create a new coach', async () => {
       const coachDto = {
-        name: 'John Doe',
+        username: 'John Doe',
         email: 'john@example.com',
         userId: 'user123',
       };
@@ -63,8 +63,18 @@ describe('CoachesService', () => {
   describe('findAll', () => {
     it('should return an array of coaches', async () => {
       const coaches = [
-        { id: 1, name: 'John Doe', email: 'john@example.com', gymnasts: [] },
-        { id: 2, name: 'Jane Smith', email: 'jane@example.com', gymnasts: [] },
+        {
+          id: 1,
+          username: 'John Doe',
+          email: 'john@example.com',
+          gymnasts: [],
+        },
+        {
+          id: 2,
+          username: 'Jane Smith',
+          email: 'jane@example.com',
+          gymnasts: [],
+        },
       ];
       mockCoachRepository.find.mockResolvedValue(coaches);
 
@@ -76,7 +86,7 @@ describe('CoachesService', () => {
     it('should return a coach by id', async () => {
       const coach = {
         id: 1,
-        name: 'John Doe',
+        username: 'John Doe',
         email: 'john@example.com',
         gymnasts: [],
       };
@@ -97,7 +107,7 @@ describe('CoachesService', () => {
 
       const coach = {
         id: 1,
-        name: 'John Doe',
+        username: 'John Doe',
         email: 'john@example.com',
         gymnasts: ['gymnast1', 'gymnast2'],
       };

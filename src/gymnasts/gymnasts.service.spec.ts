@@ -35,7 +35,7 @@ describe('GymnastsService', () => {
     it('should create a new gymnast', async () => {
       const gymnastDto = {
         userId: 'user1',
-        name: 'Jane Doe',
+        username: 'Jane Doe',
         email: 'jane@example.com',
       };
       const gymnast = { id: 1, ...gymnastDto };
@@ -51,7 +51,7 @@ describe('GymnastsService', () => {
     it('should throw BadRequestException on duplicate userId', async () => {
       const gymnastDto = {
         userId: 'user1',
-        name: 'Jane Doe',
+        username: 'Jane Doe',
         email: 'jane@example.com',
       };
 
@@ -67,11 +67,16 @@ describe('GymnastsService', () => {
   describe('findAll', () => {
     it('should return an array of gymnasts', async () => {
       const gymnasts = [
-        { id: 1, userId: 'user1', name: 'Jane Doe', email: 'jane@example.com' },
+        {
+          id: 1,
+          userId: 'user1',
+          username: 'Jane Doe',
+          email: 'jane@example.com',
+        },
         {
           id: 2,
           userId: 'user2',
-          name: 'John Smith',
+          username: 'John Smith',
           email: 'john@example.com',
         },
       ];
@@ -86,7 +91,7 @@ describe('GymnastsService', () => {
       const gymnast = {
         id: 1,
         userId: 'user1',
-        name: 'Jane Doe',
+        username: 'Jane Doe',
         email: 'jane@example.com',
         trainingIds: ['1', '2'],
       };
@@ -113,7 +118,7 @@ describe('GymnastsService', () => {
       const gymnast = {
         id: 1,
         userId: 'user1',
-        name: 'Updated Name',
+        username: 'Updated Name',
         email: 'jane@example.com',
       };
 
