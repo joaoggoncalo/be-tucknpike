@@ -1,3 +1,10 @@
+import { webcrypto } from 'crypto';
+Object.defineProperty(global, 'crypto', {
+  value: webcrypto as Crypto,
+  writable: true,
+  configurable: true,
+});
+
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
