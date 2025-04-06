@@ -7,4 +7,6 @@ export class CreateGymnastDto {
   readonly trainingIds?: string[];
   @ApiProperty()
   readonly coaches?: string[];
+  @ApiProperty()
+  readonly username: string;
 }

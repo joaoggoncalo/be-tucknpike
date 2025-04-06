@@ -5,4 +5,6 @@ export class CreateCoachDto {
   readonly userId: string;
   @ApiProperty()
   readonly gymnasts?: string[];
+  @ApiProperty()
+  readonly username: string;
 }

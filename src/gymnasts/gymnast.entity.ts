@@ -13,4 +13,12 @@ export class Gymnast {
   // Array of coach IDs associated with this gymnast.
   @Column('uuid', { array: true, nullable: true })
   coaches: string[];
+
+  // Unique username for the gymnast.
+  @Column('varchar', { unique: true })
+  username: string;
+
+  // The season goals for the gymnast.
+  @Column('text', { nullable: true })
+  seasonGoals: string;
 }
