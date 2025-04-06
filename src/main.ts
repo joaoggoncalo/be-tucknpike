@@ -1,5 +1,9 @@
 import { webcrypto } from 'crypto';
-global.crypto = webcrypto as unknown as Crypto;
+Object.defineProperty(global, 'crypto', {
+  value: webcrypto as Crypto,
+  writable: true,
+  configurable: true,
+});
 
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
