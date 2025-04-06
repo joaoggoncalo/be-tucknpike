@@ -17,4 +17,8 @@ export class Gymnast {
   // Unique username for the gymnast.
   @Column('varchar', { unique: true })
   username: string;
+
+  // The season goals for the gymnast.
+  @Column('text', { nullable: true })
+  seasonGoals: string;
 }

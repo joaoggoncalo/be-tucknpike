@@ -4,11 +4,12 @@ import {
   ForbiddenException,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { In, Repository } from 'typeorm';
 import { v4 as uuid } from 'uuid';
 import { Training, TrainingStatus } from './training.entity';
 import { CreateTrainingDto } from './dto/create-training.dto';
 import { Gymnast } from '../gymnasts/gymnast.entity';
+import { TrainingWithGymnastDto } from './dto/training-with-gymnast.dto';
 
 @Injectable()
 export class TrainingService {
@@ -105,6 +106,7 @@ export class TrainingService {
     targetUserId: string,
     currentUserId: string,
   ): Promise<Training[]> {
+    console.log('Finding all trainings for user:', targetUserId);
     // Only allow access if current user is the target user or their coach
     if (targetUserId !== currentUserId) {
       // Check if current user is a coach of the target user
@@ -124,6 +126,38 @@ export class TrainingService {
       where: { userId: targetUserId },
       order: { date: 'DESC' },
     });
+  }
+
+  async findAllForCoachAthletes(
+    coachId: string,
+  ): Promise<TrainingWithGymnastDto[]> {
+    // Get all gymnasts coached by this coach
+    const gymnasts = await this.gymnastRepository
+      .createQueryBuilder('gymnast')
+      .where(':coachId = ANY(gymnast.coaches)', { coachId })
+      .getMany();
+
+    if (gymnasts.length === 0) {
+      return [];
+    }
+
+    // Create a map of userId -> gymnast name for quick lookups
+    const gymnastMap = new Map<string, string>();
+    gymnasts.forEach((gymnast) => {
+      gymnastMap.set(gymnast.userId, gymnast.username);
+    });
+
+    // Get all trainings for these gymnasts
+    const trainings = await this.trainingRepository.find({
+      where: { userId: In(gymnasts.map((g) => g.userId)) },
+      order: { date: 'DESC' },
+    });
+
+    // Add gymnast username to each training
+    return trainings.map((training) => ({
+      ...training,
+      gymnastUsername: gymnastMap.get(training.userId) || 'Unknown gymnast',
+    }));
   }
 
   async updateStatus(
@@ -158,5 +192,15 @@ export class TrainingService {
     throw new ForbiddenException(
       'You do not have permission to access this training',
     );
+  }
+
+  async updateLocation(
+    trainingId: string,
+    location: { latitude: number; longitude: number; address?: string },
+    currentUserId: string,
+  ): Promise<Training> {
+    const training = await this.findOne(trainingId, currentUserId);
+    training.location = location;
+    return this.trainingRepository.save(training);
   }
 }

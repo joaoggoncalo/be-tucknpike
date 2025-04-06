@@ -39,7 +39,7 @@ export class Training {
   @Column({
     type: 'enum',
     enum: TrainingStatus,
-    default: TrainingStatus.DEFAULT,
+    default: TrainingStatus.SCHEDULED,
   })
   status: TrainingStatus;
 }
