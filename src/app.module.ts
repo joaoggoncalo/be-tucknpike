@@ -24,7 +24,7 @@ import { TrainingModule } from './trainings/training.module';
         host: configService.get<string>('POSTGRES_HOST'),
         port: configService.get<number>('POSTGRES_PORT'),
         autoLoadEntities: true,
-        synchronize: false,
+        synchronize: true,
       }),
     }),
     CoachesModule,

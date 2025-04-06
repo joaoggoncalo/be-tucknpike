@@ -1,0 +1,44 @@
+version: '3.8'
+
+services:
+  db:
+    container_name: supabase-db
+    # Use the Supabase Postgres image with a valid tag.
+    image: supabase/postgres:15.8.1.060
+    restart: unless-stopped
+    volumes:
+      - db-data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
+      JWT_SECRET: ${JWT_SECRET}
+      JWT_EXP: ${JWT_EXPIRY}
+    healthcheck:
+      test: ["CMD", "pg_isready", "-U", "postgres", "-h", "localhost"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  backend:
+    container_name: backend
+    build: .
+    ports:
+      - "3001:3001"
+    environment:
+      # Docker’s internal DNS lets you reference the database service by name “db”
+      - POSTGRES_HOST=db
+      - POSTGRES_PORT=5432
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      - POSTGRES_DB=${POSTGRES_DB}
+      - JWT_SECRET=${JWT_SECRET}
+      - NODE_ENV=${NODE_ENV}
+      - PORT=${PORT}
+    depends_on:
+      - db
+
+volumes:
+  db-data:
